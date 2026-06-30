@@ -1,0 +1,170 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>VulnScanner Pro Report</title>
+        <style>
+            body {
+                font-family: Arial;
+                background:#f4f4f4;
+                padding:20px;
+            }
+
+            h1 {
+                color:#2c3e50;
+            }
+
+            table {
+                border-collapse: collapse;
+                width:100%;
+                background:white;
+            }
+
+            th, td {
+                border:1px solid #ddd;
+                padding:10px;
+                text-align:center;
+            }
+
+            th {
+                background:#3498db;
+                color:white;
+            }
+
+            .low {
+                color:green;
+                font-weight:bold;
+            }
+
+            .medium {
+                color:orange;
+                font-weight:bold;
+            }
+
+            .high {
+                color:red;
+                font-weight:bold;
+            }
+        </style>
+    </head>
+
+    <body>
+
+    <h1>🛡 VulnScanner Pro Report</h1>
+
+    <p><b>Target:</b> 45.33.32.156</p>
+
+    <p><b>Generated:</b> 2026-07-01 00:05:28.936226</p>
+
+    <table>
+
+    <tr>
+        <th>Port</th>
+        <th>Service</th>
+        <th>State</th>
+        <th>Risk</th>
+    </tr>
+    
+        <tr>
+            <td>22</td>
+            <td>ssh</td>
+            <td>open</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>80</td>
+            <td>http</td>
+            <td>open</td>
+            <td class="medium">MEDIUM</td>
+        </tr>
+        
+        <tr>
+            <td>1029</td>
+            <td>ms-lsa</td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>2035</td>
+            <td>imsldoc</td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>3659</td>
+            <td>apple-sasl</td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>4126</td>
+            <td>ddrepl</td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>7019</td>
+            <td>doceri-ctl</td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>7778</td>
+            <td>interwise</td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>7911</td>
+            <td></td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>9929</td>
+            <td>nping-echo</td>
+            <td>open</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>31038</td>
+            <td></td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>31337</td>
+            <td>tcpwrapped</td>
+            <td>open</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>32772</td>
+            <td>sometimes-rpc7</td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+        <tr>
+            <td>35500</td>
+            <td></td>
+            <td>filtered</td>
+            <td class="low">LOW</td>
+        </tr>
+        
+    </table>
+
+    </body>
+    </html>
+    

@@ -2,11 +2,21 @@ import socket
 import ssl
 
 
+def clean_banner(text):
+    """Remove non-printable characters and limit length."""
+    text = "".join(ch for ch in text if ch.isprintable())
+
+    if len(text) > 100:
+        text = text[:100] + "..."
+
+    return text
+
+
 def grab_banner(ip, port):
 
     try:
 
-        # HTTP
+        # ---------------- HTTP ----------------
         if port in [80, 8080]:
 
             s = socket.socket()
@@ -26,13 +36,12 @@ def grab_banner(ip, port):
             s.close()
 
             for line in response.split("\r\n"):
-
                 if line.lower().startswith("server:"):
-                    return line
+                    return clean_banner(line)
 
-            return "HTTP Server Found"
+            return "HTTP Server"
 
-        # HTTPS
+        # ---------------- HTTPS ----------------
         elif port == 443:
 
             context = ssl.create_default_context()
@@ -54,30 +63,40 @@ def grab_banner(ip, port):
             ssock.close()
 
             for line in response.split("\r\n"):
-
                 if line.lower().startswith("server:"):
-                    return line
+                    return clean_banner(line)
 
-            return "HTTPS Server Found"
+            return "HTTPS Server"
 
-        # Everything else
-        else:
+        # ---------------- SSH ----------------
+        elif port == 22:
 
             s = socket.socket()
-
             s.settimeout(3)
-
             s.connect((ip, port))
 
-            banner = s.recv(1024).decode(errors="ignore").strip()
+            banner = s.recv(1024).decode(errors="ignore")
 
             s.close()
 
-            if banner:
-                return banner
+            return clean_banner(banner)
 
-            return "No Banner"
+        # ---------------- FTP ----------------
+        elif port == 21:
+
+            s = socket.socket()
+            s.settimeout(3)
+            s.connect((ip, port))
+
+            banner = s.recv(1024).decode(errors="ignore")
+
+            s.close()
+
+            return clean_banner(banner)
+
+        # -------- Other Services --------
+        else:
+            return "Not Supported"
 
     except Exception:
-
         return "Unavailable"

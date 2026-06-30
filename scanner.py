@@ -2,11 +2,11 @@ import nmap
 import time
 import os
 from colorama import Fore, init
-
+from html_report import generate_html_report
 from validator import resolve_target
 from risk import get_risk
 from banner_grabber import grab_banner
-
+from cve_lookup import lookup_cve
 init(autoreset=True)
 
 scanner = nmap.PortScanner(
@@ -60,6 +60,9 @@ def scan_target(target, choice):
     os.makedirs("reports", exist_ok=True)
 
     report_path = os.path.join("reports", "scan_report.txt")
+
+    # Store results for HTML report
+    scan_results = []
 
     with open(report_path, "w") as report:
 
@@ -128,12 +131,13 @@ def scan_target(target, choice):
                     version = scanner[host][protocol][port].get("version", "")
 
                     version_info = f"{product} {version}".strip()
-
+                    cves = lookup_cve(version_info)
                     risk = get_risk(port)
 
                     # Banner Grabbing
                     if state == "open":
                         banner = grab_banner(target, port)
+                        banner = "".join(ch for ch in banner if ch.isprintable())
                     else:
                         banner = "-"
 
@@ -156,11 +160,45 @@ def scan_target(target, choice):
                     print(color + line)
                     report.write(line + "\n")
 
+                    # -------------------------
+                    # Display Possible CVEs
+                    # -------------------------
+                    if cves:
+
+                        print(Fore.RED + "\nPossible CVEs:")
+
+                        report.write("\nPossible CVEs:\n")
+
+                        for cve in cves:
+                            print(
+                                Fore.RED +
+                                f"  {cve['cve']} | {cve['severity']} | {cve['description']}"
+                            )
+
+                            report.write(
+                                f"  {cve['cve']} | {cve['severity']} | {cve['description']}\n"
+                            )
+
+                    # -------------------------
+                    # Save data for HTML Report
+                    # -------------------------
+                    scan_results.append({
+                        "port": port,
+                        "service": service,
+                        "state": state,
+                        "risk": risk
+                    })
+
+
                 report.write("\n")
+
+    # Generate HTML Report
+    generate_html_report(target, scan_results)
 
     end = time.time()
 
     print(Fore.CYAN + "\n" + "=" * 90)
     print(Fore.YELLOW + f"Scan Completed in {end - start:.2f} seconds")
-    print(Fore.GREEN + f"Report saved at:\n{os.path.abspath(report_path)}")
+    print(Fore.GREEN + f"Text Report saved at:\n{os.path.abspath(report_path)}")
+    print(Fore.GREEN + f"HTML Report saved at:\n{os.path.abspath('scan_report.html')}")
     print(Fore.CYAN + "=" * 90)
