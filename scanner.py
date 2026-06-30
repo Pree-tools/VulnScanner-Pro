@@ -200,5 +200,6 @@ def scan_target(target, choice):
     print(Fore.CYAN + "\n" + "=" * 90)
     print(Fore.YELLOW + f"Scan Completed in {end - start:.2f} seconds")
     print(Fore.GREEN + f"Text Report saved at:\n{os.path.abspath(report_path)}")
-    print(Fore.GREEN + f"HTML Report saved at:\n{os.path.abspath('scan_report.html')}")
+    html_report_path = os.path.join("reports", "scan_report.html")
+    print(Fore.GREEN + f"HTML Report saved at:\n{os.path.abspath(html_report_path)}")
     print(Fore.CYAN + "=" * 90)

@@ -1,7 +1,11 @@
 from datetime import datetime
 
 def generate_html_report(target, scan_results):
-    filename = "scan_report.html"
+    import os
+
+    os.makedirs("reports", exist_ok=True)
+
+    filename = os.path.join("reports", "scan_report.html")
 
     html = f"""
     <!DOCTYPE html>
