@@ -1,4 +1,5 @@
-from colorama import Fore, Style
+from colorama import Fore
+
 
 def show_banner():
     print(Fore.CYAN + r"""
@@ -9,6 +10,10 @@ def show_banner():
     \  / | |_| || || | | | ____) || (__ | (_| || | | || | | |  __/
      \/   \__,_||_||_| |_||_____/  \___| \__,_||_| |_||_| |_|\___|
 
-                Version 1.0
-         Developed by Preet Soam
+                    VulnScanner Pro
+
+                Cybersecurity Scanner
+                     Version 0.1.0
+
+              Developed by Preet Soam
 """)

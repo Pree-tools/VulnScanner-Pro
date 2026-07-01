@@ -13,7 +13,19 @@ init(autoreset=True)
 scanner = nmap.PortScanner(
     nmap_search_path=("E:\\NMAP\\nmap.exe",)
 )
+def process_port(host, protocol, port, report, scan_results):
+        service = scanner[host][protocol][port]["name"]
+        state = scanner[host][protocol][port]["state"]
 
+        product = scanner[host][protocol][port].get("product", "")
+        version = scanner[host][protocol][port].get("version", "")
+
+        version_info = f"{product} {version}".strip()
+
+        risk = get_risk(port)
+        cves = lookup_cve(version_info)
+
+        return service, state, version_info, risk, cves
 
 def scan_target(target, choice):
 
@@ -124,16 +136,13 @@ def scan_target(target, choice):
                 report.write("-" * 90 + "\n")
 
                 for port in ports:
-
-                    service = scanner[host][protocol][port]["name"]
-                    state = scanner[host][protocol][port]["state"]
-
-                    product = scanner[host][protocol][port].get("product", "")
-                    version = scanner[host][protocol][port].get("version", "")
-
-                    version_info = f"{product} {version}".strip()
-                    cves = lookup_cve(version_info)
-                    risk = get_risk(port)
+                    service, state, version_info, risk, cves = process_port(
+                        host,
+                        protocol,
+                        port,
+                        report,
+                        scan_results
+                    )
 
                     # Banner Grabbing
                     if state == "open":
