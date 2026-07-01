@@ -4,9 +4,10 @@ import os
 from colorama import Fore, init
 from html_report import generate_html_report
 from validator import resolve_target
-from risk import get_risk
+from risk import get_risk, get_risk_color
 from banner_grabber import grab_banner
 from cve_lookup import lookup_cve
+from utils import print_separator
 init(autoreset=True)
 
 scanner = nmap.PortScanner(
@@ -27,28 +28,28 @@ def scan_target(target, choice):
     target = resolved_ip
 
     # Scan Types
-    if choice == "1":
-        arguments = "-F"
+    SCAN_TYPES = {
+        "1": "-F",
+        "2": "-sV",
+        "4": "-O"
+    }
 
-    elif choice == "2":
-        arguments = "-sV"
-
-    elif choice == "3":
+    if choice == "3":
         ports = input("Enter Port Range (Example: 1-1000): ")
         arguments = f"-p {ports}"
-
-    elif choice == "4":
-        arguments = "-O"
-
     else:
-        print(Fore.RED + "[-] Invalid Choice!")
-        return
+        arguments = SCAN_TYPES.get(choice)
+
+        if arguments is None:
+            print(Fore.RED + "[-] Invalid Choice!")
+            return
 
     start = time.time()
 
-    print(Fore.CYAN + "\n" + "=" * 90)
+    print()
+    print_separator()
     print(Fore.YELLOW + f"Scanning Target : {target}")
-    print(Fore.CYAN + "=" * 90)
+    print_separator()
 
     try:
         scanner.scan(hosts=target, arguments=arguments)
@@ -150,12 +151,8 @@ def scan_target(target, choice):
                         f"{banner}"
                     )
 
-                    if risk == "HIGH":
-                        color = Fore.RED
-                    elif risk == "MEDIUM":
-                        color = Fore.YELLOW
-                    else:
-                        color = Fore.GREEN
+                    color = get_risk_color(risk)
+
 
                     print(color + line)
                     report.write(line + "\n")
@@ -197,9 +194,10 @@ def scan_target(target, choice):
 
     end = time.time()
 
-    print(Fore.CYAN + "\n" + "=" * 90)
+    print()
+    print_separator()
     print(Fore.YELLOW + f"Scan Completed in {end - start:.2f} seconds")
     print(Fore.GREEN + f"Text Report saved at:\n{os.path.abspath(report_path)}")
     html_report_path = os.path.join("reports", "scan_report.html")
     print(Fore.GREEN + f"HTML Report saved at:\n{os.path.abspath(html_report_path)}")
-    print(Fore.CYAN + "=" * 90)
+    print_separator()

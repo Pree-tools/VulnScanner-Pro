@@ -1,27 +1,24 @@
-HIGH_RISK = {
-    21: "FTP",
-    23: "TELNET",
-    445: "SMB",
-    3389: "RDP",
-    1433: "MSSQL",
-    3306: "MYSQL"
-}
-
-MEDIUM_RISK = {
-    80: "HTTP",
-    8080: "HTTP-ALT",
-    25: "SMTP",
-    53: "DNS"
-}
-
+from colorama import Fore
 
 def get_risk(port):
 
-    if port in HIGH_RISK:
+    if port in [21, 23, 445, 3389]:
         return "HIGH"
 
-    elif port in MEDIUM_RISK:
+    elif port in [80, 8080]:
         return "MEDIUM"
 
     else:
         return "LOW"
+
+
+def get_risk_color(risk):
+    """Return terminal color based on risk level."""
+
+    colors = {
+        "HIGH": Fore.RED,
+        "MEDIUM": Fore.YELLOW,
+        "LOW": Fore.GREEN
+    }
+
+    return colors.get(risk, Fore.WHITE)
