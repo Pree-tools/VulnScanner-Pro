@@ -1,18 +1,21 @@
 # 🛡️ VulnScanner Pro
 
 A Python-based Vulnerability Scanner built using Nmap.
-
 ## 🚀 Features
 
-- Fast Port Scan
-- Service Version Detection
-- Custom Port Scanning
-- OS Detection
-- Hostname Resolution
-- Banner Grabbing
-- Risk Classification
-- Scan Report Generation
-
+- ⚡ Fast Port Scan
+- 🔍 Service Version Detection
+- 🎯 Custom Port Scanning
+- 💻 Operating System Detection
+- 🌐 Hostname Resolution
+- 📡 Banner Grabbing
+- 🚦 Risk Classification
+- 📄 TXT Report Generation
+- 🌍 HTML Report Generation
+- 🧵 ThreadPoolExecutor Architecture
+- 🛠️ Modular Scanner Design
+- 🧪 Demo CVE Lookup
+  
 ## 🛠️ Technologies Used
 
 - Python 3
