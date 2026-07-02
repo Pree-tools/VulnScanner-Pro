@@ -60,25 +60,25 @@ python main.py
 
 ### Terminal Scan
 
-![Terminal Scan](assets/terminal.png)
+![Terminal Scan](asset/terminal.png)
 
 ---
 
 ### HTML Report
 
-![HTML Report](assets/html_report.png)
+![HTML Report](asset/html_report.png)
 
 ---
 
 ### TXT Report
 
-![TXT Report](assets/txt_report.png)
+![TXT Report](asset/txt_report.png)
 
 ---
 
 ### Scan Output
 
-![Scan Output](assets/scan.png)
+![Scan Output](asset/scan.png)
 
 ## 📌 Roadmap
 
