@@ -82,19 +82,33 @@ python main.py
 
 ## 📌 Roadmap
 
-- [x] Port Scanner
-- [x] Service Detection
+### ✅ Completed
+-  current v.0.2.0
+- [x] Fast Port Scan
+- [x] Service Version Detection
+- [x] Custom Port Scanning
 - [x] Hostname Resolution
 - [x] Banner Grabbing
-- [ ] Multithreaded Scanning
-- [ ] HTML Report
+- [x] Risk Classification
+- [x] TXT Report
+- [x] HTML Report
+- [x] ThreadPoolExecutor Architecture
+- [x] Demo CVE Lookup
+
+### 🚀 Upcoming (v0.3.0)
+
+- [ ] Real CVE API Integration
+- [ ] JSON Report Export
 - [ ] PDF Report
-- [ ] CVE Detection
-- [ ] GUI Version
+- [ ] Progress Bar
+- [ ] Improved Concurrent Banner Grabbing
 
 ## 👨‍💻 Author
 
 **Preet Soam**
 
-GitHub:
-https://github.com/Pree-tools
+GitHub: https://github.com/Pree-tools
+
+## 📄 License
+
+This project is licensed under the MIT License.
