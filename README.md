@@ -66,13 +66,13 @@ python main.py
 
 ### HTML Report
 
-![HTML Report](asset/html_report.png)
+![HTML Report](asset/html report .png)
 
 ---
 
 ### TXT Report
 
-![TXT Report](asset/txt_report.png)
+![TXT Report](asset/txt report .png)
 
 ---
 
