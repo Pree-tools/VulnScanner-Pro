@@ -56,6 +56,29 @@ pip install -r requirements.txt
 ```bash
 python main.py
 ```
+## 📸 Screenshots
+
+### Terminal Scan
+
+![Terminal Scan](assets/terminal.png)
+
+---
+
+### HTML Report
+
+![HTML Report](assets/html_report.png)
+
+---
+
+### TXT Report
+
+![TXT Report](assets/txt_report.png)
+
+---
+
+### Scan Output
+
+![Scan Output](assets/scan.png)
 
 ## 📌 Roadmap
 
