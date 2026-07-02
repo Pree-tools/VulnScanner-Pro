@@ -8,25 +8,38 @@ from risk import get_risk, get_risk_color
 from banner_grabber import grab_banner
 from cve_lookup import lookup_cve
 from utils import print_separator
+from concurrent.futures import ThreadPoolExecutor
 init(autoreset=True)
 
 scanner = nmap.PortScanner(
     nmap_search_path=("E:\\NMAP\\nmap.exe",)
 )
-def process_port(host, protocol, port, report, scan_results):
-        service = scanner[host][protocol][port]["name"]
-        state = scanner[host][protocol][port]["state"]
+def process_port(host, protocol, port ):
+    service = scanner[host][protocol][port]["name"]
+    state = scanner[host][protocol][port]["state"]
 
-        product = scanner[host][protocol][port].get("product", "")
-        version = scanner[host][protocol][port].get("version", "")
+    product = scanner[host][protocol][port].get("product", "")
+    version = scanner[host][protocol][port].get("version", "")
 
-        version_info = f"{product} {version}".strip()
+    version_info = f"{product} {version}".strip()
 
-        risk = get_risk(port)
-        cves = lookup_cve(version_info)
+    risk = get_risk(port)
+    cves = lookup_cve(version_info)
 
-        return service, state, version_info, risk, cves
+    return {
+        "port": port,
+        "service": service,
+        "state": state,
+        "version": version_info,
+        "risk": risk,
+        "cves": cves
+    }
 
+def get_banner(target, port):
+    banner = grab_banner(target, port)
+    banner = "".join(ch for ch in banner if ch.isprintable())
+
+    return banner
 def scan_target(target, choice):
 
     resolved_ip = resolve_target(target)
@@ -134,69 +147,76 @@ def scan_target(target, choice):
 
                 report.write(header + "\n")
                 report.write("-" * 90 + "\n")
+                with ThreadPoolExecutor(max_workers=10) as executor:
 
-                for port in ports:
-                    service, state, version_info, risk, cves = process_port(
-                        host,
-                        protocol,
-                        port,
-                        report,
-                        scan_results
-                    )
+                    futures = []
 
-                    # Banner Grabbing
-                    if state == "open":
-                        banner = grab_banner(target, port)
-                        banner = "".join(ch for ch in banner if ch.isprintable())
-                    else:
-                        banner = "-"
+                    # Submit all tasks
+                    for port in ports:
+                        future = executor.submit(
+                            process_port,
+                            host,
+                            protocol,
+                            port
+                        )
+                        futures.append((port, future))
 
-                    line = (
-                        f"{port:<8}"
-                        f"{service:<18}"
-                        f"{state:<10}"
-                        f"{risk:<10}"
-                        f"{version_info:<25}"
-                        f"{banner}"
-                    )
+                    # Process results
+                    for port, future in futures:
 
-                    color = get_risk_color(risk)
+                        result = future.result()
+
+                        # Banner grabbing
+                        if result["state"] == "open":
+                            banner = get_banner(target, port)
+                        else:
+                            banner = "-"
+
+                        line = (
+                            f"{port:<8}"
+                            f"{result['service']:<18}"
+                            f"{result['state']:<10}"
+                            f"{result['risk']:<10}"
+                            f"{result['version']:<25}"
+                            f"{banner}"
+                        )
+
+                        color = get_risk_color(result["risk"])
+
+                        print(color + line)
+                        report.write(line + "\n")
+
+                        # Display Possible CVEs
+                        if result["cves"]:
+
+                            print(Fore.RED + "\nPossible CVEs:")
+                            report.write("\nPossible CVEs:\n")
+
+                            for cve in result["cves"]:
+                                print(
+                                    Fore.RED +
+                                    f"  {cve['cve']} | {cve['severity']} | {cve['description']}"
+                                )
+
+                                report.write(
+                                    f"  {cve['cve']} | {cve['severity']} | {cve['description']}\n"
+                                )
+
+                        scan_results.append({
+                            "port": port,
+                            "service": result["service"],
+                            "state": result["state"],
+                            "risk": result["risk"]
+                        })
+
+                    report.write("\n")
 
 
-                    print(color + line)
-                    report.write(line + "\n")
-
-                    # -------------------------
-                    # Display Possible CVEs
-                    # -------------------------
-                    if cves:
-
-                        print(Fore.RED + "\nPossible CVEs:")
-
-                        report.write("\nPossible CVEs:\n")
-
-                        for cve in cves:
-                            print(
-                                Fore.RED +
-                                f"  {cve['cve']} | {cve['severity']} | {cve['description']}"
-                            )
-
-                            report.write(
-                                f"  {cve['cve']} | {cve['severity']} | {cve['description']}\n"
-                            )
-
-                    # -------------------------
-                    # Save data for HTML Report
-                    # -------------------------
-                    scan_results.append({
-                        "port": port,
-                        "service": service,
-                        "state": state,
-                        "risk": risk
-                    })
 
 
-                report.write("\n")
+
+
+
 
     # Generate HTML Report
     generate_html_report(target, scan_results)
